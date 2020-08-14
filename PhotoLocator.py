@@ -3,9 +3,6 @@ import requests
 import sys
 import exifread
 
-# ad = input(str)
-ad = "/home/alex/Изображения/фото из сети/w.jpg"
-
 
 def dict_print(dictionary):
     for (key, value) in dictionary.items():
@@ -29,6 +26,7 @@ def GetMeta_web(url):
 
     print("Getting meta data...")
     exif = img._getexif()
+
 
     if exif is not None:
         GPS_date = {}
@@ -55,8 +53,8 @@ def GetMeta_HD(address):
         GPS = {}
         tags = exifread.process_file(f, details=False)
         if 'GPS GPSLatitude' in tags.keys():
-            GPS['Latitude:'] = str(tags["GPS GPSLatitude"]) + str(tags["GPS GPSLatitudeRef"])
-            GPS['Longitude:'] = str(tags["GPS GPSLongitude"]) + str(tags["GPS GPSLongitudeRef"])
+            GPS['Latitude:'] = ''.join([str(tags["GPS GPSLatitude"]), str(tags["GPS GPSLatitudeRef"])])
+            GPS['Longitude:'] = ''.join([str(tags["GPS GPSLongitude"]), str(tags["GPS GPSLongitudeRef"])])
 
         else:
             GPS = {
@@ -66,21 +64,13 @@ def GetMeta_HD(address):
     return GPS
 
 
-dict_print(GetMeta_HD(ad))
+""" ad = "https://af.attachmail.ru/cgi-bin/readmsg?id=15974199561712723875;0;1;1&mode=attachment&email=tri_de@inbox.ru&rid=4066741423637204308683105082865436773"""
 
-# if exif is not None:
-#     for (tag, value) in exif.items():
-#         if tag == 34853:
-#             print("Latitude:\t", value[2][0][0], "°", value[2][1][0], "′", value[2][2][0] / 10000, "″", value[1])
-#             print("Longitude:\t", value[4][0][0], "°", value[4][1][0], "′", value[4][2][0] / 10000, "″", value[3])
-#         if tag == 272:
-#             print("Camera:\t", value)
-#         if tag == 271:
-#             print("Device:\t", value)
-#         if tag == 36867:
-#             print("Create date:\t", value)
-#         if tag == 36868:
-#             print("Time Original:\t", value)
-#
-# else:
-#     print("no data available")
+"""/home/alex/Изображения/фото из сети/w.jpg"""
+
+if __name__ == '__main__':
+    ad = input()
+    if ad.find('http://') != -1 or ad.find('https://') != -1:
+        dict_print(GetMeta_web(ad))
+    else:
+        dict_print(GetMeta_HD(ad))
